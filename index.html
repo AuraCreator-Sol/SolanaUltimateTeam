@@ -3,39 +3,90 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Aura Creator</title>
+  <title>Solana Ultimate Team</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #1e1e1e;
+      background-color: #121212;
       color: white;
+      text-align: center;
       padding: 20px;
+    }
+
+    input, select {
+      padding: 8px;
+      margin: 5px;
+      font-size: 14px;
     }
 
     .card-preview {
       position: relative;
-      display: inline-block;
-      margin-top: 20px;
-    }
-
-    #template-img {
       width: 300px;
+      height: 400px;
+      margin: 20px auto;
     }
 
-    #logo-img {
+    .card-preview img {
+      width: 100%;
+      height: auto;
+    }
+
+    .overlay {
       position: absolute;
-      top: 20%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      color: white;
+      font-weight: bold;
+      pointer-events: none;
+    }
+
+    .logo {
+      position: absolute;
+      top: 70px;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translateX(-50%);
       width: 80px;
       height: 80px;
     }
 
-    select, button {
-      padding: 10px;
-      margin: 10px;
+    .player-name {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 22px;
+    }
+
+    .player-position {
+      position: absolute;
+      top: 50px;
+      left: 20px;
+      font-size: 18px;
+    }
+
+    .player-nation {
+      position: absolute;
+      top: 50px;
+      right: 20px;
+      font-size: 18px;
+    }
+
+    .stats {
+      position: absolute;
+      bottom: 30px;
+      left: 20px;
+      font-size: 14px;
+      text-align: left;
+      line-height: 1.4;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
       font-size: 16px;
+      cursor: pointer;
     }
 
     canvas {
@@ -44,75 +95,157 @@
   </style>
 </head>
 <body>
-  <h1>Aura Creator</h1>
 
-  <label for="template-select">Template :</label>
-  <select id="template-select">
-    <option value="FUT.jpg">FUT 1</option>
-    <option value="FUT2.jpg">FUT 2</option>
-    <option value="FUT3.jpg">FUT 3</option>
-  </select>
+  <h1>Solana Ultimate Team Card Generator</h1>
 
-  <label for="logo-select">Logo :</label>
-  <select id="logo-select">
-    <option value="PEPE.png">Pepe</option>
-    <option value="shiba.png">Shiba</option>
-    <option value="ETH.png">Ethereum</option>
-    <option value="BTC.png">Bitcoin</option>
-    <option value="SOL.png">Solana</option>
-    <option value="Doge.png">Doge</option>
-  </select>
-
-  <div class="card-preview">
-    <img id="template-img" src="FUT.jpg" alt="Template" />
-    <img id="logo-img" src="PEPE.png" alt="Logo" />
+  <div>
+    <input type="text" id="player-name" placeholder="Nom du joueur" />
+    <input type="text" id="position" placeholder="Position (ex: AT)" />
+    <input type="text" id="nation" placeholder="Nationalité" />
+    <br/>
+    <input type="number" id="vit" placeholder="VIT" />
+    <input type="number" id="tir" placeholder="TIR" />
+    <input type="number" id="pas" placeholder="PAS" />
+    <input type="number" id="dri" placeholder="DRI" />
+    <input type="number" id="def" placeholder="DEF" />
+    <input type="number" id="phy" placeholder="PHY" />
   </div>
 
-  <br />
-  <button onclick="downloadCard()">Télécharger</button>
+  <div>
+    <label>Template :</label>
+    <select id="template-select">
+      <option value="FUT.jpg">FUT 1</option>
+      <option value="FUT2.jpg">FUT 2</option>
+      <option value="FUT3.jpg">FUT 3</option>
+    </select>
 
-  <canvas id="card-canvas" width="300" height="400"></canvas>
+    <label>Logo :</label>
+    <select id="logo-select">
+      <option value="PEPE.png">Pepe</option>
+      <option value="shiba.png">Shiba</option>
+      <option value="ETH.png">Ethereum</option>
+      <option value="BTC.png">Bitcoin</option>
+      <option value="SOL.png">Solana</option>
+      <option value="Doge.png">Doge</option>
+    </select>
+  </div>
+
+  <div class="card-preview" id="preview">
+    <img id="template-img" src="FUT.jpg" alt="Template" />
+    <div class="overlay">
+      <div class="player-name" id="text-name">Nom</div>
+      <div class="player-position" id="text-position">POS</div>
+      <div class="player-nation" id="text-nation">NAT</div>
+      <div class="stats" id="text-stats">
+        VIT 00<br />
+        TIR 00<br />
+        PAS 00<br />
+        DRI 00<br />
+        DEF 00<br />
+        PHY 00
+      </div>
+      <img class="logo" id="logo-img" src="PEPE.png" alt="Logo" />
+    </div>
+  </div>
+
+  <button onclick="generateImage()">Télécharger la carte</button>
+
+  <canvas id="canvas" width="300" height="400"></canvas>
 
   <script>
-    const templateSelect = document.getElementById("template-select");
-    const logoSelect = document.getElementById("logo-select");
-    const templateImg = document.getElementById("template-img");
-    const logoImg = document.getElementById("logo-img");
-    const canvas = document.getElementById("card-canvas");
-    const ctx = canvas.getContext("2d");
+    const nameInput = document.getElementById('player-name');
+    const positionInput = document.getElementById('position');
+    const nationInput = document.getElementById('nation');
+    const vit = document.getElementById('vit');
+    const tir = document.getElementById('tir');
+    const pas = document.getElementById('pas');
+    const dri = document.getElementById('dri');
+    const def = document.getElementById('def');
+    const phy = document.getElementById('phy');
 
-    templateSelect.addEventListener("change", () => {
+    const nameText = document.getElementById('text-name');
+    const positionText = document.getElementById('text-position');
+    const nationText = document.getElementById('text-nation');
+    const statsText = document.getElementById('text-stats');
+
+    const templateSelect = document.getElementById('template-select');
+    const logoSelect = document.getElementById('logo-select');
+    const templateImg = document.getElementById('template-img');
+    const logoImg = document.getElementById('logo-img');
+
+    templateSelect.addEventListener('change', () => {
       templateImg.src = templateSelect.value;
     });
 
-    logoSelect.addEventListener("change", () => {
+    logoSelect.addEventListener('change', () => {
       logoImg.src = logoSelect.value;
     });
 
-    function downloadCard() {
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.src = templateImg.src;
-      img.onload = () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    function updatePreview() {
+      nameText.textContent = nameInput.value || "Nom";
+      positionText.textContent = positionInput.value || "POS";
+      nationText.textContent = nationInput.value || "NAT";
+      statsText.innerHTML =
+        `VIT ${vit.value || "00"}<br/>
+         TIR ${tir.value || "00"}<br/>
+         PAS ${pas.value || "00"}<br/>
+         DRI ${dri.value || "00"}<br/>
+         DEF ${def.value || "00"}<br/>
+         PHY ${phy.value || "00"}`;
+    }
+
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', updatePreview);
+    });
+
+    function generateImage() {
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+
+      const background = new Image();
+      background.src = templateImg.src;
+      background.onload = () => {
+        ctx.drawImage(background, 0, 0, 300, 400);
+
+        ctx.font = "bold 20px Arial";
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
+        ctx.fillText(nameInput.value || "Nom", 150, 30);
+
+        ctx.font = "16px Arial";
+        ctx.textAlign = "left";
+        ctx.fillText(positionInput.value || "POS", 20, 60);
+        ctx.textAlign = "right";
+        ctx.fillText(nationInput.value || "NAT", 280, 60);
 
         const logo = new Image();
-        logo.crossOrigin = "anonymous";
         logo.src = logoImg.src;
         logo.onload = () => {
-          const logoSize = 80;
-          const logoX = (canvas.width - logoSize) / 2;
-          const logoY = canvas.height * 0.2 - logoSize / 2;
-          ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
+          ctx.drawImage(logo, 110, 80, 80, 80);
 
-          const link = document.createElement("a");
-          link.download = "aura-card.png";
-          link.href = canvas.toDataURL("image/png");
+          ctx.font = "14px Arial";
+          ctx.textAlign = "left";
+          const stats = [
+            `VIT ${vit.value || "00"}`,
+            `TIR ${tir.value || "00"}`,
+            `PAS ${pas.value || "00"}`,
+            `DRI ${dri.value || "00"}`,
+            `DEF ${def.value || "00"}`,
+            `PHY ${phy.value || "00"}`
+          ];
+          stats.forEach((stat, i) => {
+            ctx.fillText(stat, 20, 280 + i * 20);
+          });
+
+          const link = document.createElement('a');
+          link.download = "carte-solana.png";
+          link.href = canvas.toDataURL();
           link.click();
         };
       };
     }
+
+    updatePreview();
   </script>
 </body>
 </html>
