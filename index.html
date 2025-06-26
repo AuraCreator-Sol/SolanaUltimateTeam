@@ -1,33 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FUT Card Generator</title>
   <style>
     body {
+      background-color: #111;
+      color: #fff;
       font-family: Arial, sans-serif;
-      background-color: #121212;
-      color: white;
       text-align: center;
       padding: 20px;
-    }
-
-    input, select {
-      padding: 8px;
-      margin: 5px;
-      font-size: 14px;
     }
 
     .card-preview {
       position: relative;
       width: 300px;
       height: 460px;
-      margin: 20px auto;
+      margin: 0 auto 20px;
     }
 
     .card-preview img {
       width: 100%;
       height: auto;
+      display: block;
     }
 
     .overlay {
@@ -36,41 +32,44 @@
       left: 0;
       width: 100%;
       height: 100%;
-      color: white;
-      font-weight: bold;
       pointer-events: none;
     }
 
     .logo {
       position: absolute;
-      top: 25px;
+      top: 38px;
       left: 50%;
       transform: translateX(-50%);
-      width: 30px;
-      height: 30px;
-    }
-
-    .player-name {
-      position: absolute;
-      bottom: 105px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 18px;
+      width: 60px;
+      height: 60px;
     }
 
     .player-position {
       position: absolute;
       top: 20px;
-      left: 25px;
+      left: 28px;
       font-size: 18px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .player-name {
+      position: absolute;
+      bottom: 82px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
     }
 
     .player-nation {
       position: absolute;
-      bottom: 85px;
+      bottom: 62px;
       left: 50%;
       transform: translateX(-50%);
       font-size: 14px;
+      color: #ccc;
     }
 
     .stats {
@@ -79,7 +78,7 @@
       left: 35px;
       font-size: 14px;
       text-align: left;
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
     .stats.right {
@@ -88,103 +87,101 @@
       text-align: right;
     }
 
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
+    .controls {
+      margin-bottom: 20px;
     }
 
-    canvas {
-      display: none;
+    input, select, button {
+      padding: 6px;
+      margin: 5px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    #downloadBtn {
+      background-color: #0f0;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-
   <h1>FUT Card Generator</h1>
 
-  <div>
-    <input type="text" id="nameInput" placeholder="Player Name">
-    <input type="text" id="nationInput" placeholder="Country">
-    <input type="text" id="positionInput" placeholder="Position (e.g. ST, CB)">
-  </div>
-
-  <div>
-    <input type="number" id="vit" placeholder="PAC" max="99" min="1">
-    <input type="number" id="tir" placeholder="SHO" max="99" min="1">
-    <input type="number" id="pas" placeholder="PAS" max="99" min="1">
-    <input type="number" id="dri" placeholder="DRI" max="99" min="1">
-    <input type="number" id="def" placeholder="DEF" max="99" min="1">
-    <input type="number" id="phy" placeholder="PHY" max="99" min="1">
-  </div>
-
-  <div>
-    <select id="cardSelect">
-      <option value="FUT.jpg">Base Card</option>
-      <option value="FUT2.jpg">Card Style 2</option>
-      <option value="FUT3.jpg">Card Style 3</option>
+  <div class="controls">
+    <select id="background-select">
+      <option value="FUT.png">Background 1</option>
+      <option value="FUT2.png">Background 2</option>
+      <option value="FUT3.png">Background 3</option>
     </select>
 
-    <select id="logoSelect">
-      <option value="PEPE.png">PEPE</option>
-      <option value="Doge.png">DOGE</option>
-      <option value="shiba.png">SHIBA</option>
+    <select id="logo-select">
+      <option value="BTC.png">BTC</option>
       <option value="ETH.png">ETH</option>
-      <option value="BTC.jpg">BTC</option>
-      <option value="SOL.jpg">SOL</option>
-    </select>
+      <option value="SOL.png">SOL</option>
+      <option value="PEPE.png">PEPE</option>
+      <option value="Doge.png">Doge</option>
+      <option value="shiba.png">Shiba</option>
+    </select><br/>
+
+    <input type="text" id="player-name-input" placeholder="Name">
+    <input type="text" id="nation-input" placeholder="Nation">
+    <input type="text" id="position-input" placeholder="POS"><br/>
+
+    <input type="number" id="sho" placeholder="SHO" min="1" max="99">
+    <input type="number" id="pas" placeholder="PAS" min="1" max="99">
+    <input type="number" id="def" placeholder="DEF" min="1" max="99"><br/>
+
+    <input type="number" id="phy" placeholder="PHY" min="1" max="99">
+    <button onclick="updateCard()">Update Card</button>
+    <button id="downloadBtn" onclick="downloadCard()">Download Card</button>
   </div>
 
-  <div class="card-preview">
-    <img id="card-image" src="FUT.jpg" alt="Card Base" />
+  <div class="card-preview" id="card-container">
+    <img id="card-image" src="FUT.png" alt="Card Background">
     <div class="overlay">
-      <div class="player-position" id="text-position">CB</div>
-      <img class="logo" id="logo-img" src="PEPE.png" alt="Logo" />
-      <div class="player-name" id="text-name">Your Name</div>
-      <div class="player-nation" id="text-nation">Country</div>
-      <div class="stats" id="stats-left">
-        <div id="stat-pace">PAC 99</div>
-        <div id="stat-shooting">SHO 99</div>
-        <div id="stat-passing">PAS 99</div>
+      <img id="logo-img" class="logo" src="BTC.png" alt="Logo">
+      <div class="player-position" id="player-position">POS</div>
+      <div class="player-name" id="player-name">Player</div>
+      <div class="player-nation" id="player-nation">Nation</div>
+      <div class="stats left">
+        <div id="sho">SHO 99</div>
+        <div id="pas">PAS 99</div>
       </div>
-      <div class="stats right" id="stats-right">
-        <div id="stat-dribbling">DRI 99</div>
-        <div id="stat-defending">DEF 99</div>
-        <div id="stat-physical">PHY 99</div>
+      <div class="stats right">
+        <div id="def">DEF 99</div>
+        <div id="phy">PHY 99</div>
       </div>
     </div>
   </div>
 
-  <button onclick="updatePreview()">Update Card</button>
-
   <script>
-    const nameInput = document.getElementById('nameInput');
-    const nationInput = document.getElementById('nationInput');
-    const positionInput = document.getElementById('positionInput');
-    const vit = document.getElementById('vit');
-    const tir = document.getElementById('tir');
-    const pas = document.getElementById('pas');
-    const dri = document.getElementById('dri');
-    const def = document.getElementById('def');
-    const phy = document.getElementById('phy');
+    function updateCard() {
+      document.getElementById('card-image').src = document.getElementById('background-select').value;
+      document.getElementById('logo-img').src = document.getElementById('logo-select').value;
 
-    function updatePreview() {
-      document.getElementById('text-name').textContent = nameInput.value || "Your Name";
-      document.getElementById('text-position').textContent = positionInput.value || "POS";
-      document.getElementById('text-nation').textContent = nationInput.value || "Country";
+      document.getElementById('player-name').textContent = document.getElementById('player-name-input').value || 'Player';
+      document.getElementById('player-nation').textContent = document.getElementById('nation-input').value || 'Nation';
+      document.getElementById('player-position').textContent = document.getElementById('position-input').value || 'POS';
 
-      document.getElementById('stat-pace').textContent = "PAC " + (vit.value || "99");
-      document.getElementById('stat-shooting').textContent = "SHO " + (tir.value || "99");
-      document.getElementById('stat-passing').textContent = "PAS " + (pas.value || "99");
-      document.getElementById('stat-dribbling').textContent = "DRI " + (dri.value || "99");
-      document.getElementById('stat-defending').textContent = "DEF " + (def.value || "99");
-      document.getElementById('stat-physical').textContent = "PHY " + (phy.value || "99");
+      document.getElementById('sho').textContent = 'SHO ' + (document.getElementById('sho').value || '99');
+      document.getElementById('pas').textContent = 'PAS ' + (document.getElementById('pas').value || '99');
+      document.getElementById('def').textContent = 'DEF ' + (document.getElementById('def').value || '99');
+      document.getElementById('phy').textContent = 'PHY ' + (document.getElementById('phy').value || '99');
+    }
 
-      document.getElementById('card-image').src = document.getElementById('cardSelect').value;
-      document.getElementById('logo-img').src = document.getElementById('logoSelect').value;
+    function downloadCard() {
+      html2canvas(document.getElementById("card-container")).then(canvas => {
+        const link = document.createElement("a");
+        link.download = "fut_card.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
     }
   </script>
 
+  <!-- Lib for screenshot -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </body>
 </html>
