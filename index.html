@@ -39,18 +39,18 @@
 
     .logo {
       position: absolute;
-      top: 30px; /* 10px lower than previous */
+      top: 32px; /* 10px lower than previous */
       left: 50%;
       transform: translateX(-50%);
-      width: 80px;
-      height: 80px;
+      width: 90px;
+      height: 90px;
       object-fit: contain;
     }
 
     .player-position {
       position: absolute;
-      top: 10px; /* was 20px */
-      left: 28px;
+      bottom: 60px; /* was 20px */
+      left: 50%;
       font-size: 18px;
       font-weight: bold;
       color: white;
@@ -58,7 +58,7 @@
 
     .player-name {
       position: absolute;
-      bottom: 92px; /* was 82px */
+      bottom: 100px; /* was 82px */
       left: 50%;
       transform: translateX(-50%);
       font-size: 18px;
@@ -68,7 +68,7 @@
 
     .player-nation {
       position: absolute;
-      bottom: 72px; /* was 62px */
+      bottom: 80px; /* was 62px */
       left: 50%;
       transform: translateX(-50%);
       font-size: 14px;
@@ -132,11 +132,10 @@
     <input type="text" id="nation-input" placeholder="Nation">
     <input type="text" id="position-input" placeholder="POS"><br/>
 
-    <input type="number" id="input-sho" placeholder="SHO" min="1" max="99">
-    <input type="number" id="input-pas" placeholder="PAS" min="1" max="99">
-    <input type="number" id="input-def" placeholder="DEF" min="1" max="99"><br/>
-
-    <input type="number" id="input-phy" placeholder="PHY" min="1" max="99">
+    <input type="number" id="input-FUN" placeholder="FUN" min="1" max="99">
+    <input type="number" id="input-TRASH" placeholder="TRASH" min="1" max="99">
+    <input type="number" id="input-FART" placeholder="FART" min="1" max="99"><br/>
+    <input type="number" id="input-GIGA" placeholder="GIGA" min="1" max="99">
     <button onclick="updateCard()">Update Card</button>
     <button id="downloadBtn" onclick="downloadCard()">Download Card</button>
   </div>
@@ -149,12 +148,12 @@
       <div class="player-name" id="player-name">Player</div>
       <div class="player-nation" id="player-nation">Nation</div>
       <div class="stats left">
-        <div id="display-sho">SHO 99</div>
-        <div id="display-pas">PAS 99</div>
+        <div id="display-sho">FUN 99</div>
+        <div id="display-pas">TRASH 99</div>
       </div>
       <div class="stats right">
-        <div id="display-def">DEF 99</div>
-        <div id="display-phy">PHY 99</div>
+        <div id="display-def">FART 99</div>
+        <div id="display-phy">GIGA 99</div>
       </div>
     </div>
   </div>
@@ -168,10 +167,10 @@
       document.getElementById('player-nation').textContent = document.getElementById('nation-input').value || 'Nation';
       document.getElementById('player-position').textContent = document.getElementById('position-input').value || 'POS';
 
-      document.getElementById('display-sho').textContent = 'SHO ' + (document.getElementById('input-sho').value || '99');
-      document.getElementById('display-pas').textContent = 'PAS ' + (document.getElementById('input-pas').value || '99');
-      document.getElementById('display-def').textContent = 'DEF ' + (document.getElementById('input-def').value || '99');
-      document.getElementById('display-phy').textContent = 'PHY ' + (document.getElementById('input-phy').value || '99');
+      document.getElementById('display-sho').textContent = 'FUN ' + (document.getElementById('input-FUN').value || '99');
+      document.getElementById('display-pas').textContent = 'TRASH ' + (document.getElementById('input-TRASH').value || '99');
+      document.getElementById('display-def').textContent = 'FART ' + (document.getElementById('input-FART').value || '99');
+      document.getElementById('display-phy').textContent = 'GIGA ' + (document.getElementById('input-GIGA').value || '99');
     }
 
     function downloadCard() {
