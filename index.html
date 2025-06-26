@@ -130,62 +130,75 @@
     </div>
   </div>
 
-  <script>
-    const logos = {
-      solana: "https://i.imgur.com/NbS6WzC.png",
-      doge: "https://i.imgur.com/MRYLkqk.png",
-      shiba: "https://i.imgur.com/fHxyM7j.png",
-      pepe: "https://i.imgur.com/bKr5DUm.png",
-      floki: "https://i.imgur.com/TtSxCH6.png"
-    };
+ <script>
+  const logos = {
+    solana: "https://i.imgur.com/NbS6WzC.png",
+    doge: "https://i.imgur.com/MRYLkqk.png",
+    shiba: "https://i.imgur.com/fHxyM7j.png",
+    pepe: "https://i.imgur.com/bKr5DUm.png",
+    floki: "https://i.imgur.com/TtSxCH6.png"
+  };
 
-    const cardTemplates = {
-      legendary: "FUT.jpg",
-      champion: "FUT2.jpg",
-      divine: "FUT3.jpg"
-    };
+  const cardTemplates = {
+    legendary: "FUT.jpg",
+    champion: "FUT2.jpg",
+    divine: "FUT3.jpg"
+  };
 
-    function generateCard() {
-      const avatarInput = document.getElementById("avatar").files[0];
-      const name = document.getElementById("name").value;
-      const position = document.getElementById("position").value;
-      const nationality = document.getElementById("nationality").value;
-      const stats = document.getElementById("stats").value;
-      const logo = document.getElementById("logo").value;
-      const rarity = document.getElementById("rarity").value;
+  // 🆕 Mise à jour dynamique du fond
+  document.getElementById("rarity").addEventListener("change", function () {
+    const rarity = this.value;
+    const card = document.getElementById("card");
+    card.style.backgroundImage = `url('${cardTemplates[rarity]}')`;
+    card.style.display = "block";
+  });
 
-      const card = document.getElementById("card");
-      const avatarPreview = document.getElementById("avatarPreview");
+  function generateCard() {
+    const avatarInput = document.getElementById("avatar").files[0];
+    const name = document.getElementById("name").value;
+    const position = document.getElementById("position").value;
+    const nationality = document.getElementById("nationality").value;
+    const stats = document.getElementById("stats").value;
+    const logo = document.getElementById("logo").value;
+    const rarity = document.getElementById("rarity").value;
 
-      card.style.backgroundImage = `url('${cardTemplates[rarity]}')`;
+    const card = document.getElementById("card");
+    const avatarPreview = document.getElementById("avatarPreview");
 
-      if (avatarInput) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          avatarPreview.src = e.target.result;
-        };
-        reader.readAsDataURL(avatarInput);
-      }
+    card.style.backgroundImage = `url('${cardTemplates[rarity]}')`;
 
-      document.getElementById("cardName").textContent = name;
-      document.getElementById("cardPosition").textContent = position;
-      document.getElementById("cardNationality").textContent = nationality;
-      document.getElementById("cardStats").textContent = stats;
-      document.getElementById("cardLogo").src = logos[logo];
-
-      card.style.display = "block";
+    if (avatarInput) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        avatarPreview.src = e.target.result;
+      };
+      reader.readAsDataURL(avatarInput);
     }
 
-    function downloadCard() {
-      const card = document.getElementById("card");
-      html2canvas(card).then(canvas => {
-        const link = document.createElement("a");
-        link.download = "carte-solana.png";
-        link.href = canvas.toDataURL();
-        link.click();
-      });
-    }
-  </script>
+    document.getElementById("cardName").textContent = name;
+    document.getElementById("cardPosition").textContent = position;
+    document.getElementById("cardNationality").textContent = nationality;
+    document.getElementById("cardStats").textContent = stats;
+    document.getElementById("cardLogo").src = logos[logo];
+
+    card.style.display = "block";
+  }
+
+  function downloadCard() {
+    const card = document.getElementById("card");
+    html2canvas(card, {
+      scale: 2, // change to 1 if too big
+      width: 300,
+      height: 470
+    }).then(canvas => {
+      const link = document.createElement("a");
+      link.download = "carte-solana.png";
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+  }
+</script>
+
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
