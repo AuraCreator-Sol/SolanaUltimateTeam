@@ -2,188 +2,191 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Solana Ultimate Team</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #0c0c0c;
+      background: #0e0e0e;
       color: white;
       text-align: center;
+      margin: 0;
+      padding: 20px;
     }
-
+    .controls {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, select {
+      padding: 6px;
+      width: 200px;
+      margin-top: 5px;
+    }
     .card {
-      position: relative;
       width: 300px;
-      height: 450px;
+      height: 470px;
       margin: 20px auto;
       border-radius: 20px;
+      position: relative;
       overflow: hidden;
-      box-shadow: 0 0 20px #00ffcc;
-      transition: 0.4s ease;
-    }
-
-    .card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 0 30px #00ffd5, 0 0 20px #fff;
-    }
-
-    .card.bronze {
-      background: url('https://i.imgur.com/9lJmcX2.png') no-repeat center center;
+      box-shadow: 0 0 20px rgba(0,255,255,0.4);
       background-size: cover;
+      background-position: center;
     }
-    .card.gold {
-      background: url('https://i.imgur.com/Ya9nIQT.png') no-repeat center center;
-      background-size: cover;
+    .card-content {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 10px;
+      font-size: 16px;
     }
-    .card.purple {
-      background: url('https://i.imgur.com/X3muIGF.png') no-repeat center center;
-      background-size: cover;
+    .card-content h2 {
+      margin: 0;
+      font-size: 22px;
     }
-    .card.legendary {
-      background: url('https://i.imgur.com/Zb0vF7r.png') no-repeat center center;
-      background-size: cover;
+    .card-content img.logo {
+      width: 40px;
+      margin-top: 5px;
     }
-
-    .card img.avatar {
+    #avatarPreview {
       width: 100%;
       height: 60%;
       object-fit: cover;
       border-bottom: 2px solid #fff;
     }
-
-    .info {
-      padding: 10px;
-      background-color: rgba(0, 0, 0, 0.6);
+    .card:hover {
+      transform: scale(1.02);
+      transition: transform 0.3s ease;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
     }
-
-    .info h2 {
-      margin: 10px 0 5px;
-      font-size: 22px;
-    }
-
-    .info p {
-      margin: 2px 0;
-      font-size: 14px;
-    }
-
-    .crypto-logo {
-      width: 40px;
-      height: 40px;
-      margin-top: 5px;
-    }
-
-    label {
-      display: block;
-      margin-top: 10px;
-    }
-
-    input, select {
-      padding: 6px;
-      width: 90%;
-      max-width: 300px;
-      margin-bottom: 10px;
-    }
-
     button {
-      margin: 10px;
       padding: 10px 20px;
-      background-color: #00ffcc;
+      background: #13c4a3;
       border: none;
-      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      margin-top: 20px;
       cursor: pointer;
+      border-radius: 10px;
     }
-
-    canvas { display: none; }
+    button:hover {
+      background: #10a78b;
+    }
   </style>
 </head>
 <body>
 
-  <h1>Solana Ultimate Team</h1>
+  <h1>Solana Ultimate Team Card Generator</h1>
 
-  <input type="file" id="avatarInput" accept="image/*" />
-  <label>Nom :</label><input type="text" id="name" />
-  <label>Position :</label><input type="text" id="position" />
-  <label>Nationalité :</label><input type="text" id="nation" />
-  <label>Stats (PAC SHO PAS DRI DEF PHY) :</label><input type="text" id="stats" />
+  <div class="controls">
+    <label for="avatar">Image / Avatar :</label>
+    <input type="file" id="avatar" accept="image/*" />
 
-  <label>Logo Crypto :</label>
-  <select id="logo">
-    <option value="solana">Solana</option>
-    <option value="doge">Doge</option>
-    <option value="shiba">Shiba</option>
-    <option value="pepe">Pepe</option>
-    <option value="floki">Floki</option>
-  </select>
+    <label for="name">Nom :</label>
+    <input type="text" id="name" />
 
-  <label>Rareté :</label>
-  <select id="rarity">
-    <option value="bronze">Bronze</option>
-    <option value="gold">Or</option>
-    <option value="purple">Violet</option>
-    <option value="legendary">Légendaire</option>
-  </select>
+    <label for="position">Position :</label>
+    <input type="text" id="position" />
 
-  <br>
-  <button onclick="generateCard()">Générer</button>
-  <button onclick="downloadCard()">Télécharger</button>
+    <label for="nationality">Nationalité :</label>
+    <input type="text" id="nationality" />
 
-  <div id="card" class="card legendary">
-    <img id="cardImage" class="avatar" src="https://i.imgur.com/HgPro9R.png" alt="avatar" />
-    <div class="info">
+    <label for="stats">Stats :</label>
+    <input type="text" id="stats" />
+
+    <label for="logo">Logo Crypto :</label>
+    <select id="logo">
+      <option value="solana">Solana</option>
+      <option value="doge">Doge</option>
+      <option value="shiba">Shiba</option>
+      <option value="pepe">Pepe</option>
+      <option value="floki">Floki</option>
+    </select>
+
+    <label for="rarity">Rareté :</label>
+    <select id="rarity">
+      <option value="legendary">Légendaire</option>
+      <option value="champion">Champion</option>
+      <option value="divine">Divin</option>
+    </select>
+
+    <button onclick="generateCard()">Générer la Carte</button>
+    <button onclick="downloadCard()">Télécharger</button>
+  </div>
+
+  <div id="card" class="card" style="display:none;">
+    <img id="avatarPreview" src="" />
+    <div class="card-content">
       <h2 id="cardName">Nom</h2>
-      <p id="cardPos">Position</p>
-      <p id="cardNation">Nationalité</p>
-      <p id="cardStats">Stats</p>
-      <img id="cryptoLogo" class="crypto-logo" src="https://cryptologos.cc/logos/solana-sol-logo.png?v=032" alt="logo crypto" />
+      <div id="cardPosition">Position</div>
+      <div id="cardNationality">Nationalité</div>
+      <div id="cardStats">Stats</div>
+      <img id="cardLogo" class="logo" src="" alt="logo crypto" />
     </div>
   </div>
 
-  <canvas id="canvas" width="300" height="450"></canvas>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
-   const logos = {
-  solana: "https://i.imgur.com/NbS6WzC.png",  // Solana logo fiable
-  doge: "https://i.imgur.com/MRYLkqk.png",    // Doge logo
-  shiba: "https://i.imgur.com/fHxyM7j.png",   // Shiba logo
-  pepe: "https://i.imgur.com/bKr5DUm.png",    // Pepe logo
-  floki: "https://i.imgur.com/TtSxCH6.png"    // Floki logo
-};
-    document.getElementById('avatarInput').addEventListener('change', function (e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (evt) {
-          document.getElementById('cardImage').src = evt.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
+    const logos = {
+      solana: "https://i.imgur.com/NbS6WzC.png",
+      doge: "https://i.imgur.com/MRYLkqk.png",
+      shiba: "https://i.imgur.com/fHxyM7j.png",
+      pepe: "https://i.imgur.com/bKr5DUm.png",
+      floki: "https://i.imgur.com/TtSxCH6.png"
+    };
+
+    const cardTemplates = {
+      legendary: "FUT.jpg",
+      champion: "FUT2.jpg",
+      divine: "FUT3.jpg"
+    };
 
     function generateCard() {
-      document.getElementById('cardName').innerText = document.getElementById('name').value;
-      document.getElementById('cardPos').innerText = document.getElementById('position').value;
-      document.getElementById('cardNation').innerText = document.getElementById('nation').value;
-      document.getElementById('cardStats').innerText = document.getElementById('stats').value;
+      const avatarInput = document.getElementById("avatar").files[0];
+      const name = document.getElementById("name").value;
+      const position = document.getElementById("position").value;
+      const nationality = document.getElementById("nationality").value;
+      const stats = document.getElementById("stats").value;
+      const logo = document.getElementById("logo").value;
+      const rarity = document.getElementById("rarity").value;
 
-      const selectedLogo = document.getElementById('logo').value;
-      document.getElementById('cryptoLogo').src = logos[selectedLogo];
+      const card = document.getElementById("card");
+      const avatarPreview = document.getElementById("avatarPreview");
 
-      const rarity = document.getElementById('rarity').value;
-      const card = document.getElementById('card');
-      card.className = 'card ' + rarity;
+      card.style.backgroundImage = `url('${cardTemplates[rarity]}')`;
+
+      if (avatarInput) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          avatarPreview.src = e.target.result;
+        };
+        reader.readAsDataURL(avatarInput);
+      }
+
+      document.getElementById("cardName").textContent = name;
+      document.getElementById("cardPosition").textContent = position;
+      document.getElementById("cardNationality").textContent = nationality;
+      document.getElementById("cardStats").textContent = stats;
+      document.getElementById("cardLogo").src = logos[logo];
+
+      card.style.display = "block";
     }
 
     function downloadCard() {
-      const card = document.getElementById('card');
+      const card = document.getElementById("card");
       html2canvas(card).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'solana_card.png';
+        const link = document.createElement("a");
+        link.download = "carte-solana.png";
         link.href = canvas.toDataURL();
         link.click();
       });
     }
   </script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
