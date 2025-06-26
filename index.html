@@ -1,20 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Solana Meme Card Generator</title>
+  <title>Solana Ultimate Team</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #111; color: #fff; text-align: center; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      text-align: center;
+    }
     .card {
       position: relative;
       width: 300px;
       height: 450px;
-      background: linear-gradient(135deg, #6e1ecb, #23c9ff);
-      border-radius: 20px;
       margin: 20px auto;
+      border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 0 20px #23c9ff;
+      box-shadow: 0 0 20px #00ffcc;
+      background: url('https://i.imgur.com/Zb0vF7r.png') no-repeat center center;
+      background-size: cover;
     }
     .card img.avatar {
       width: 100%;
@@ -22,41 +27,63 @@
       object-fit: cover;
       border-bottom: 2px solid #fff;
     }
-    .card .info {
+    .info {
       padding: 10px;
+      background-color: rgba(0, 0, 0, 0.5);
     }
-    .info h2 { margin: 10px 0 5px; font-size: 24px; }
-    .info p { margin: 2px 0; font-size: 14px; }
+    .info h2 {
+      margin: 10px 0 5px;
+      font-size: 22px;
+    }
+    .info p {
+      margin: 2px 0;
+      font-size: 14px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, select {
+      padding: 6px;
+      width: 90%;
+      max-width: 300px;
+      margin-bottom: 10px;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #00ffcc;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
     canvas { display: none; }
-    label { display: block; margin: 10px 0 5px; }
-    input, select { padding: 5px; width: 80%; max-width: 300px; }
   </style>
 </head>
 <body>
-  <h1>Solana Meme Card Generator</h1>
+
+  <h1>Solana Ultimate Team</h1>
 
   <input type="file" id="avatarInput" accept="image/*" />
-  <br />
   <label>Nom :</label><input type="text" id="name" placeholder="Nom du joueur" />
   <label>Position :</label><input type="text" id="position" placeholder="ST, CAM..." />
-  <label>Nationalité :</label><input type="text" id="nation" placeholder="Pays / Drapeau" />
-  <label>Stats :</label>
-  <input type="text" id="stats" placeholder="PAC SHO PAS DRI DEF PHY" />
-
+  <label>Nationalité :</label><input type="text" id="nation" placeholder="Pays ou drapeau" />
+  <label>Stats (PAC SHO PAS DRI DEF PHY) :</label><input type="text" id="stats" placeholder="99 99 99 99 99 99" />
   <label>Logo :</label>
   <select id="logo">
-    <option value="solana">Solana</option>
-    <option value="doge">Doge</option>
-    <option value="shiba">Shiba</option>
-    <option value="pepe">Pepe</option>
+    <option value="Solana">Solana</option>
+    <option value="Doge">Doge</option>
+    <option value="Shiba">Shiba</option>
+    <option value="Pepe">Pepe</option>
+    <option value="Floki">Floki</option>
   </select>
 
-  <br /><br />
-  <button onclick="generateCard()">Générer la carte</button>
+  <br>
+  <button onclick="generateCard()">Générer</button>
   <button onclick="downloadCard()">Télécharger</button>
 
   <div class="card" id="card">
-    <img id="cardImage" class="avatar" src="" alt="Avatar" />
+    <img id="cardImage" class="avatar" src="https://i.imgur.com/HgPro9R.png" alt="avatar" />
     <div class="info">
       <h2 id="cardName">Nom</h2>
       <p id="cardPos">Position</p>
@@ -68,6 +95,7 @@
 
   <canvas id="canvas" width="300" height="450"></canvas>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
     const avatarInput = document.getElementById('avatarInput');
     const cardImage = document.getElementById('cardImage');
@@ -92,19 +120,15 @@
     }
 
     function downloadCard() {
-      const canvas = document.getElementById('canvas');
-      const ctx = canvas.getContext('2d');
       const card = document.getElementById('card');
-
-      html2canvas(card).then(canvasResult => {
+      html2canvas(card).then(canvas => {
         const link = document.createElement('a');
         link.download = 'solana_card.png';
-        link.href = canvasResult.toDataURL();
+        link.href = canvas.toDataURL();
         link.click();
       });
     }
   </script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
