@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Solana Ultimate Team</title>
+  <meta charset="UTF-8">
+  <title>FUT Card Generator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -22,7 +21,7 @@
     .card-preview {
       position: relative;
       width: 300px;
-      height: 400px;
+      height: 460px;
       margin: 20px auto;
     }
 
@@ -44,42 +43,49 @@
 
     .logo {
       position: absolute;
-      top: 70px;
+      top: 25px;
       left: 50%;
       transform: translateX(-50%);
-      width: 80px;
-      height: 80px;
+      width: 30px;
+      height: 30px;
     }
 
     .player-name {
       position: absolute;
-      top: 20px;
+      bottom: 105px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 22px;
+      font-size: 18px;
     }
 
     .player-position {
       position: absolute;
-      top: 50px;
-      left: 20px;
+      top: 20px;
+      left: 25px;
       font-size: 18px;
     }
 
     .player-nation {
       position: absolute;
-      top: 50px;
-      right: 20px;
-      font-size: 18px;
+      bottom: 85px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
     }
 
     .stats {
       position: absolute;
-      bottom: 30px;
-      left: 20px;
+      bottom: 10px;
+      left: 35px;
       font-size: 14px;
       text-align: left;
-      line-height: 1.4;
+      line-height: 1.5;
+    }
+
+    .stats.right {
+      left: auto;
+      right: 35px;
+      text-align: right;
     }
 
     button {
@@ -96,66 +102,66 @@
 </head>
 <body>
 
-  <h1>Solana Ultimate Team Card Generator</h1>
+  <h1>FUT Card Generator</h1>
 
   <div>
-    <input type="text" id="player-name" placeholder="Nom du joueur" />
-    <input type="text" id="position" placeholder="Position (ex: AT)" />
-    <input type="text" id="nation" placeholder="Nationalité" />
-    <br/>
-    <input type="number" id="vit" placeholder="VIT" />
-    <input type="number" id="tir" placeholder="TIR" />
-    <input type="number" id="pas" placeholder="PAS" />
-    <input type="number" id="dri" placeholder="DRI" />
-    <input type="number" id="def" placeholder="DEF" />
-    <input type="number" id="phy" placeholder="PHY" />
+    <input type="text" id="nameInput" placeholder="Player Name">
+    <input type="text" id="nationInput" placeholder="Country">
+    <input type="text" id="positionInput" placeholder="Position (e.g. ST, CB)">
   </div>
 
   <div>
-    <label>Template :</label>
-    <select id="template-select">
-      <option value="FUT.jpg">FUT 1</option>
-      <option value="FUT2.jpg">FUT 2</option>
-      <option value="FUT3.jpg">FUT 3</option>
+    <input type="number" id="vit" placeholder="PAC" max="99" min="1">
+    <input type="number" id="tir" placeholder="SHO" max="99" min="1">
+    <input type="number" id="pas" placeholder="PAS" max="99" min="1">
+    <input type="number" id="dri" placeholder="DRI" max="99" min="1">
+    <input type="number" id="def" placeholder="DEF" max="99" min="1">
+    <input type="number" id="phy" placeholder="PHY" max="99" min="1">
+  </div>
+
+  <div>
+    <select id="cardSelect">
+      <option value="FUT.jpg">Base Card</option>
+      <option value="FUT2.jpg">Card Style 2</option>
+      <option value="FUT3.jpg">Card Style 3</option>
     </select>
 
-    <label>Logo :</label>
-    <select id="logo-select">
-      <option value="PEPE.png">Pepe</option>
-      <option value="shiba.png">Shiba</option>
-      <option value="ETH.png">Ethereum</option>
-      <option value="BTC.png">Bitcoin</option>
-      <option value="SOL.png">Solana</option>
-      <option value="Doge.png">Doge</option>
+    <select id="logoSelect">
+      <option value="PEPE.png">PEPE</option>
+      <option value="Doge.png">DOGE</option>
+      <option value="shiba.png">SHIBA</option>
+      <option value="ETH.png">ETH</option>
+      <option value="BTC.jpg">BTC</option>
+      <option value="SOL.jpg">SOL</option>
     </select>
   </div>
 
-  <div class="card-preview" id="preview">
-    <img id="template-img" src="FUT.jpg" alt="Template" />
+  <div class="card-preview">
+    <img id="card-image" src="FUT.jpg" alt="Card Base" />
     <div class="overlay">
-      <div class="player-name" id="text-name">Nom</div>
-      <div class="player-position" id="text-position">POS</div>
-      <div class="player-nation" id="text-nation">NAT</div>
-      <div class="stats" id="text-stats">
-        VIT 00<br />
-        TIR 00<br />
-        PAS 00<br />
-        DRI 00<br />
-        DEF 00<br />
-        PHY 00
-      </div>
+      <div class="player-position" id="text-position">CB</div>
       <img class="logo" id="logo-img" src="PEPE.png" alt="Logo" />
+      <div class="player-name" id="text-name">Your Name</div>
+      <div class="player-nation" id="text-nation">Country</div>
+      <div class="stats" id="stats-left">
+        <div id="stat-pace">PAC 99</div>
+        <div id="stat-shooting">SHO 99</div>
+        <div id="stat-passing">PAS 99</div>
+      </div>
+      <div class="stats right" id="stats-right">
+        <div id="stat-dribbling">DRI 99</div>
+        <div id="stat-defending">DEF 99</div>
+        <div id="stat-physical">PHY 99</div>
+      </div>
     </div>
   </div>
 
-  <button onclick="generateImage()">Télécharger la carte</button>
-
-  <canvas id="canvas" width="300" height="400"></canvas>
+  <button onclick="updatePreview()">Update Card</button>
 
   <script>
-    const nameInput = document.getElementById('player-name');
-    const positionInput = document.getElementById('position');
-    const nationInput = document.getElementById('nation');
+    const nameInput = document.getElementById('nameInput');
+    const nationInput = document.getElementById('nationInput');
+    const positionInput = document.getElementById('positionInput');
     const vit = document.getElementById('vit');
     const tir = document.getElementById('tir');
     const pas = document.getElementById('pas');
@@ -163,89 +169,22 @@
     const def = document.getElementById('def');
     const phy = document.getElementById('phy');
 
-    const nameText = document.getElementById('text-name');
-    const positionText = document.getElementById('text-position');
-    const nationText = document.getElementById('text-nation');
-    const statsText = document.getElementById('text-stats');
-
-    const templateSelect = document.getElementById('template-select');
-    const logoSelect = document.getElementById('logo-select');
-    const templateImg = document.getElementById('template-img');
-    const logoImg = document.getElementById('logo-img');
-
-    templateSelect.addEventListener('change', () => {
-      templateImg.src = templateSelect.value;
-    });
-
-    logoSelect.addEventListener('change', () => {
-      logoImg.src = logoSelect.value;
-    });
-
     function updatePreview() {
-      nameText.textContent = nameInput.value || "Nom";
-      positionText.textContent = positionInput.value || "POS";
-      nationText.textContent = nationInput.value || "NAT";
-      statsText.innerHTML =
-        `VIT ${vit.value || "00"}<br/>
-         TIR ${tir.value || "00"}<br/>
-         PAS ${pas.value || "00"}<br/>
-         DRI ${dri.value || "00"}<br/>
-         DEF ${def.value || "00"}<br/>
-         PHY ${phy.value || "00"}`;
+      document.getElementById('text-name').textContent = nameInput.value || "Your Name";
+      document.getElementById('text-position').textContent = positionInput.value || "POS";
+      document.getElementById('text-nation').textContent = nationInput.value || "Country";
+
+      document.getElementById('stat-pace').textContent = "PAC " + (vit.value || "99");
+      document.getElementById('stat-shooting').textContent = "SHO " + (tir.value || "99");
+      document.getElementById('stat-passing').textContent = "PAS " + (pas.value || "99");
+      document.getElementById('stat-dribbling').textContent = "DRI " + (dri.value || "99");
+      document.getElementById('stat-defending').textContent = "DEF " + (def.value || "99");
+      document.getElementById('stat-physical').textContent = "PHY " + (phy.value || "99");
+
+      document.getElementById('card-image').src = document.getElementById('cardSelect').value;
+      document.getElementById('logo-img').src = document.getElementById('logoSelect').value;
     }
-
-    document.querySelectorAll('input').forEach(input => {
-      input.addEventListener('input', updatePreview);
-    });
-
-    function generateImage() {
-      const canvas = document.getElementById('canvas');
-      const ctx = canvas.getContext('2d');
-
-      const background = new Image();
-      background.src = templateImg.src;
-      background.onload = () => {
-        ctx.drawImage(background, 0, 0, 300, 400);
-
-        ctx.font = "bold 20px Arial";
-        ctx.fillStyle = "white";
-        ctx.textAlign = "center";
-        ctx.fillText(nameInput.value || "Nom", 150, 30);
-
-        ctx.font = "16px Arial";
-        ctx.textAlign = "left";
-        ctx.fillText(positionInput.value || "POS", 20, 60);
-        ctx.textAlign = "right";
-        ctx.fillText(nationInput.value || "NAT", 280, 60);
-
-        const logo = new Image();
-        logo.src = logoImg.src;
-        logo.onload = () => {
-          ctx.drawImage(logo, 110, 80, 80, 80);
-
-          ctx.font = "14px Arial";
-          ctx.textAlign = "left";
-          const stats = [
-            `VIT ${vit.value || "00"}`,
-            `TIR ${tir.value || "00"}`,
-            `PAS ${pas.value || "00"}`,
-            `DRI ${dri.value || "00"}`,
-            `DEF ${def.value || "00"}`,
-            `PHY ${phy.value || "00"}`
-          ];
-          stats.forEach((stat, i) => {
-            ctx.fillText(stat, 20, 280 + i * 20);
-          });
-
-          const link = document.createElement('a');
-          link.download = "carte-solana.png";
-          link.href = canvas.toDataURL();
-          link.click();
-        };
-      };
-    }
-
-    updatePreview();
   </script>
+
 </body>
 </html>
