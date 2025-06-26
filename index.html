@@ -39,7 +39,7 @@
 
     .logo {
       position: absolute;
-      top: 32px; /* 10px lower than previous */
+      top: 35px;
       left: 50%;
       transform: translateX(-50%);
       width: 90px;
@@ -49,16 +49,16 @@
 
     .player-position {
       position: absolute;
-      bottom: 60px; /* was 20px */
-      left: 50%;
+      bottom: 50px;
+      left: 48%;
       font-size: 18px;
       font-weight: bold;
-      color: white;
+      color: red;
     }
 
     .player-name {
       position: absolute;
-      bottom: 100px; /* was 82px */
+      bottom: 100px;
       left: 50%;
       transform: translateX(-50%);
       font-size: 18px;
@@ -68,7 +68,7 @@
 
     .player-nation {
       position: absolute;
-      bottom: 80px; /* was 62px */
+      bottom: 80px;
       left: 50%;
       transform: translateX(-50%);
       font-size: 14px;
@@ -77,7 +77,7 @@
 
     .stats {
       position: absolute;
-      bottom: 20px; /* was 10px */
+      bottom: 20px;
       left: 35px;
       font-size: 14px;
       text-align: left;
@@ -107,6 +107,18 @@
       font-weight: bold;
       cursor: pointer;
     }
+
+    .uploaded-img {
+      position: absolute;
+      top: 110px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      z-index: 1;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
@@ -128,6 +140,12 @@
       <option value="shiba.png">Shiba</option>
     </select><br/>
 
+    <p style="color: #ccc; font-size: 14px;">
+      🔧 For best results, remove the background of your image using
+      <a href="https://www.remove.bg/" target="_blank" style="color: #0f0;">remove.bg</a> before uploading.
+    </p>
+    <input type="file" id="upload-image" accept="image/*"><br/>
+
     <input type="text" id="player-name-input" placeholder="Name">
     <input type="text" id="nation-input" placeholder="Nation">
     <input type="text" id="position-input" placeholder="POS"><br/>
@@ -143,6 +161,7 @@
   <div class="card-preview" id="card-container">
     <img id="card-image" src="FUT.png" alt="Card Background">
     <div class="overlay">
+      <img id="uploaded-photo" class="uploaded-img" style="display:none;" />
       <img id="logo-img" class="logo" src="BTC.png" alt="Logo">
       <div class="player-position" id="player-position">POS</div>
       <div class="player-name" id="player-name">Player</div>
@@ -181,6 +200,16 @@
         link.click();
       });
     }
+
+    document.getElementById("upload-image").addEventListener("change", function(event) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = document.getElementById("uploaded-photo");
+        img.src = e.target.result;
+        img.style.display = "block";
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    });
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
