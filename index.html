@@ -1,205 +1,123 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Solana Ultimate Team</title>
+  <meta charset="UTF-8">
+  <title>Carte Crypto FUT</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #0e0e0e;
-      color: white;
+      background: #111;
+      color: #fff;
       text-align: center;
-      margin: 0;
       padding: 20px;
     }
-    .controls {
-      margin-bottom: 20px;
-    }
-    label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-    input, select {
-      padding: 6px;
-      width: 200px;
-      margin-top: 5px;
-    }
+
     .card {
       width: 300px;
-      height: 470px;
-      margin: 20px auto;
-      border-radius: 20px;
+      height: 500px;
       position: relative;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(0,255,255,0.4);
+      margin: 20px auto;
       background-size: cover;
       background-position: center;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
     }
-    .card-content {
+
+    .logo {
       position: absolute;
-      bottom: 0;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      padding: 10px;
-      font-size: 16px;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: white;
     }
-    .card-content h2 {
-      margin: 0;
-      font-size: 22px;
+
+    .form {
+      margin-top: 30px;
     }
-    .card-content img.logo {
-      width: 40px;
-      margin-top: 5px;
-    }
-    #avatarPreview {
-      width: 100%;
-      height: 60%;
-      object-fit: cover;
-      border-bottom: 2px solid #fff;
-    }
-    .card:hover {
-      transform: scale(1.02);
-      transition: transform 0.3s ease;
-      box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
-    }
-    button {
-      padding: 10px 20px;
-      background: #13c4a3;
+
+    select, input[type="text"] {
+      padding: 8px;
+      margin: 10px;
+      border-radius: 8px;
       border: none;
-      color: white;
-      font-weight: bold;
-      margin-top: 20px;
-      cursor: pointer;
-      border-radius: 10px;
     }
-    button:hover {
-      background: #10a78b;
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    #preview {
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
 
-  <h1>Solana Ultimate Team Card Generator</h1>
+  <h1>Créateur de Carte Crypto FUT</h1>
 
-  <div class="controls">
-    <label for="avatar">Image / Avatar :</label>
-    <input type="file" id="avatar" accept="image/*" />
-
-    <label for="name">Nom :</label>
-    <input type="text" id="name" />
-
-    <label for="position">Position :</label>
-    <input type="text" id="position" />
-
-    <label for="nationality">Nationalité :</label>
-    <input type="text" id="nationality" />
-
-    <label for="stats">Stats :</label>
-    <input type="text" id="stats" />
-
-    <label for="logo">Logo Crypto :</label>
-    <select id="logo">
-      <option value="solana">Solana</option>
-      <option value="doge">Doge</option>
-      <option value="shiba">Shiba</option>
-      <option value="pepe">Pepe</option>
-      <option value="floki">Floki</option>
+  <div class="form">
+    <select id="rareteSelect">
+      <option value="FUT.jpg">Commune</option>
+      <option value="FUT2.jpg">Rare</option>
+      <option value="FUT3.jpg">Légendaire</option>
     </select>
 
-    <label for="rarity">Rareté :</label>
-    <select id="rarity">
-      <option value="legendary">Légendaire</option>
-      <option value="champion">Champion</option>
-      <option value="divine">Divin</option>
+    <select id="logoSelect">
+      <option value="BTC.png">Bitcoin</option>
+      <option value="ETH.png">Ethereum</option>
+      <option value="shiba.png">Shiba</option>
+      <option value="PEPE.png">Pepe</option>
+      <option value="SOL.png">Solana</option>
+      <option value="Doge.png">Doge</option>
     </select>
 
-    <button onclick="generateCard()">Générer la Carte</button>
-    <button onclick="downloadCard()">Télécharger</button>
+    <input type="text" id="pseudoInput" placeholder="Entrez un pseudo">
+
+    <br>
+    <button onclick="telecharger()">Télécharger la carte</button>
   </div>
 
-  <div id="card" class="card" style="display:none;">
-    <img id="avatarPreview" src="" />
-    <div class="card-content">
-      <h2 id="cardName">Nom</h2>
-      <div id="cardPosition">Position</div>
-      <div id="cardNationality">Nationalité</div>
-      <div id="cardStats">Stats</div>
-      <img id="cardLogo" class="logo" src="" alt="logo crypto" />
+  <div id="preview">
+    <div class="card" id="carte" style="background-image: url('FUT.jpg');">
+      <img src="BTC.png" class="logo" id="logo">
     </div>
   </div>
 
- <script>
-  const logos = {
-    solana: "https://i.imgur.com/NbS6WzC.png",
-    doge: "https://i.imgur.com/MRYLkqk.png",
-    shiba: "https://i.imgur.com/fHxyM7j.png",
-    pepe: "https://i.imgur.com/bKr5DUm.png",
-    floki: "https://i.imgur.com/TtSxCH6.png"
-  };
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script>
+    const carte = document.getElementById('carte');
+    const rareteSelect = document.getElementById('rareteSelect');
+    const logo = document.getElementById('logo');
+    const logoSelect = document.getElementById('logoSelect');
 
-  const cardTemplates = {
-    legendary: "FUT.jpg",
-    champion: "FUT2.jpg",
-    divine: "FUT3.jpg"
-  };
-
-  // 🆕 Mise à jour dynamique du fond
-  document.getElementById("rarity").addEventListener("change", function () {
-    const rarity = this.value;
-    const card = document.getElementById("card");
-    card.style.backgroundImage = `url('${cardTemplates[rarity]}')`;
-    card.style.display = "block";
-  });
-
-  function generateCard() {
-    const avatarInput = document.getElementById("avatar").files[0];
-    const name = document.getElementById("name").value;
-    const position = document.getElementById("position").value;
-    const nationality = document.getElementById("nationality").value;
-    const stats = document.getElementById("stats").value;
-    const logo = document.getElementById("logo").value;
-    const rarity = document.getElementById("rarity").value;
-
-    const card = document.getElementById("card");
-    const avatarPreview = document.getElementById("avatarPreview");
-
-    card.style.backgroundImage = `url('${cardTemplates[rarity]}')`;
-
-    if (avatarInput) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        avatarPreview.src = e.target.result;
-      };
-      reader.readAsDataURL(avatarInput);
-    }
-
-    document.getElementById("cardName").textContent = name;
-    document.getElementById("cardPosition").textContent = position;
-    document.getElementById("cardNationality").textContent = nationality;
-    document.getElementById("cardStats").textContent = stats;
-    document.getElementById("cardLogo").src = logos[logo];
-
-    card.style.display = "block";
-  }
-
-  function downloadCard() {
-    const card = document.getElementById("card");
-    html2canvas(card, {
-      scale: 2, // change to 1 if too big
-      width: 300,
-      height: 470
-    }).then(canvas => {
-      const link = document.createElement("a");
-      link.download = "carte-solana.png";
-      link.href = canvas.toDataURL();
-      link.click();
+    rareteSelect.addEventListener('change', () => {
+      carte.style.backgroundImage = `url('${rareteSelect.value}')`;
     });
-  }
-</script>
 
+    logoSelect.addEventListener('change', () => {
+      logo.src = logoSelect.value;
+    });
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    function telecharger() {
+      html2canvas(carte, { scale: 2 }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'carte.png';
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    }
+  </script>
+
 </body>
 </html>
