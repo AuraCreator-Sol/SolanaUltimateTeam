@@ -1,123 +1,118 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Carte Crypto FUT</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aura Creator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #111;
-      color: #fff;
       text-align: center;
+      background-color: #1e1e1e;
+      color: white;
       padding: 20px;
     }
 
-    .card {
-      width: 300px;
-      height: 500px;
+    .card-preview {
       position: relative;
-      margin: 20px auto;
-      background-size: cover;
-      background-position: center;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-    }
-
-    .logo {
-      position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: contain;
-      background: white;
-    }
-
-    .form {
-      margin-top: 30px;
-    }
-
-    select, input[type="text"] {
-      padding: 8px;
-      margin: 10px;
-      border-radius: 8px;
-      border: none;
-    }
-
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background: #4caf50;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    #preview {
+      display: inline-block;
       margin-top: 20px;
+    }
+
+    #template-img {
+      width: 300px;
+    }
+
+    #logo-img {
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+    }
+
+    select, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+    }
+
+    canvas {
+      display: none;
     }
   </style>
 </head>
 <body>
+  <h1>Aura Creator</h1>
 
-  <h1>Créateur de Carte Crypto FUT</h1>
+  <label for="template-select">Template :</label>
+  <select id="template-select">
+    <option value="FUT.jpg">FUT 1</option>
+    <option value="FUT2.jpg">FUT 2</option>
+    <option value="FUT3.jpg">FUT 3</option>
+  </select>
 
-  <div class="form">
-    <select id="rareteSelect">
-      <option value="FUT.jpg">Commune</option>
-      <option value="FUT2.jpg">Rare</option>
-      <option value="FUT3.jpg">Légendaire</option>
-    </select>
+  <label for="logo-select">Logo :</label>
+  <select id="logo-select">
+    <option value="PEPE.png">Pepe</option>
+    <option value="shiba.png">Shiba</option>
+    <option value="ETH.png">Ethereum</option>
+    <option value="BTC.png">Bitcoin</option>
+    <option value="SOL.png">Solana</option>
+    <option value="Doge.png">Doge</option>
+  </select>
 
-    <select id="logoSelect">
-      <option value="BTC.png">Bitcoin</option>
-      <option value="ETH.png">Ethereum</option>
-      <option value="shiba.png">Shiba</option>
-      <option value="PEPE.png">Pepe</option>
-      <option value="SOL.png">Solana</option>
-      <option value="Doge.png">Doge</option>
-    </select>
-
-    <input type="text" id="pseudoInput" placeholder="Entrez un pseudo">
-
-    <br>
-    <button onclick="telecharger()">Télécharger la carte</button>
+  <div class="card-preview">
+    <img id="template-img" src="FUT.jpg" alt="Template" />
+    <img id="logo-img" src="PEPE.png" alt="Logo" />
   </div>
 
-  <div id="preview">
-    <div class="card" id="carte" style="background-image: url('FUT.jpg');">
-      <img src="BTC.png" class="logo" id="logo">
-    </div>
-  </div>
+  <br />
+  <button onclick="downloadCard()">Télécharger</button>
 
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <canvas id="card-canvas" width="300" height="400"></canvas>
+
   <script>
-    const carte = document.getElementById('carte');
-    const rareteSelect = document.getElementById('rareteSelect');
-    const logo = document.getElementById('logo');
-    const logoSelect = document.getElementById('logoSelect');
+    const templateSelect = document.getElementById("template-select");
+    const logoSelect = document.getElementById("logo-select");
+    const templateImg = document.getElementById("template-img");
+    const logoImg = document.getElementById("logo-img");
+    const canvas = document.getElementById("card-canvas");
+    const ctx = canvas.getContext("2d");
 
-    rareteSelect.addEventListener('change', () => {
-      carte.style.backgroundImage = `url('${rareteSelect.value}')`;
+    templateSelect.addEventListener("change", () => {
+      templateImg.src = templateSelect.value;
     });
 
-    logoSelect.addEventListener('change', () => {
-      logo.src = logoSelect.value;
+    logoSelect.addEventListener("change", () => {
+      logoImg.src = logoSelect.value;
     });
 
-    function telecharger() {
-      html2canvas(carte, { scale: 2 }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'carte.png';
-        link.href = canvas.toDataURL();
-        link.click();
-      });
+    function downloadCard() {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.src = templateImg.src;
+      img.onload = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        const logo = new Image();
+        logo.crossOrigin = "anonymous";
+        logo.src = logoImg.src;
+        logo.onload = () => {
+          const logoSize = 80;
+          const logoX = (canvas.width - logoSize) / 2;
+          const logoY = canvas.height * 0.2 - logoSize / 2;
+          ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
+
+          const link = document.createElement("a");
+          link.download = "aura-card.png";
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+        };
+      };
     }
   </script>
-
 </body>
 </html>
